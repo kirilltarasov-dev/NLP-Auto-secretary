@@ -10,12 +10,22 @@ venv/
 .env/
 
 
-# Data
-data/
-*.csv
-*.parquet
+# Data artifacts (keep raw train/test CSVs and label/responses)
+data/banking77/*_clean.csv
+data/banking77/*_tfidf.joblib
+data/banking77/*_indices.csv
+data/banking77/logreg_model.joblib
+data/banking77/benchmark_metrics.csv
+data/banking77/full_benchmark_metrics.csv
+data/banking77/eval_artifacts/
 
-# Models
+# Allowlist: keep core inputs
+!data/banking77/train.csv
+!data/banking77/test.csv
+!data/banking77/label_names.json
+!data/banking77/responses.json
+
+# Models (global)
 *.pkl
 *.joblib
 
