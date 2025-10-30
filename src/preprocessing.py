@@ -61,8 +61,8 @@ train_indices, val_indices = train_test_split(
 pd.Series(train_indices).to_csv("data/banking77/train_indices.csv", index=False)
 pd.Series(val_indices).to_csv("data/banking77/val_indices.csv", index=False)
 
-# Vectorization
-vectorizer = TfidfVectorizer()
+# Vectorization (use uni+bi-grams)
+vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=2)
 train_df_tfidf = vectorizer.fit_transform(train_texts)
 val_df_tfidf = vectorizer.transform(val_texts)
 test_df_tfidf = vectorizer.transform(test_df['clean_text'])
