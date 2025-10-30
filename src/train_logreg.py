@@ -29,8 +29,8 @@ val_labels = labels[val_indices]
 print(f"Train shape: {X_train.shape}, Val shape: {X_val.shape}")
 print(f"Labels train: {len(train_labels)}, val: {len(val_labels)}")
 
-# Модель
-logreg = LogisticRegression(max_iter=1000, n_jobs=-1, random_state=42)
+# Модель (n_jobs=1 для совместимости среды)
+logreg = LogisticRegression(max_iter=1000, n_jobs=1, random_state=42)
 logreg.fit(X_train, train_labels)
 
 # Предсказания
