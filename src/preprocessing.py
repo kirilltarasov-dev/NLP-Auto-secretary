@@ -14,7 +14,6 @@ import os
 
 # Setup NLTK resources
 nltk.download('punkt')
-nltk.download('punkt_tab')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
@@ -54,9 +53,15 @@ print("Cleaned texts saved as train_clean.csv and test_clean.csv")
 train_texts, val_texts, train_labels, val_labels = train_test_split(
     train_df['clean_text'], train_df['label'], test_size=0.2, random_state=42, stratify=train_df['label']
 )
+# Сохраняем индексы train и val относительно исходного train_df
+train_indices, val_indices = train_test_split(
+    train_df.index, test_size=0.2, random_state=42, stratify=train_df['label']
+)
+pd.Series(train_indices).to_csv("data/banking77/train_indices.csv", index=False)
+pd.Series(val_indices).to_csv("data/banking77/val_indices.csv", index=False)
 
-# Vectorization
-vectorizer = TfidfVectorizer()
+# Vectorization (use uni+bi-grams)
+vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=2)
 train_df_tfidf = vectorizer.fit_transform(train_texts)
 val_df_tfidf = vectorizer.transform(val_texts)
 test_df_tfidf = vectorizer.transform(test_df['clean_text'])
