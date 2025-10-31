@@ -1,18 +1,14 @@
-# NLP-Auto-secretary
+# NLP Auto-Secretary — Banking77 Intent Classifier
 
-## Dataset Overview
+A university project for "Introduction to Natural Language Text Processing" (University of Debrecen, 2025).
 
-The dataset contains **77 intents** and **13,083 user utterances**, covering a wide range of banking-related customer service queries.
+## Project Overview
 
-### Key Observations from EDA:
-- The dataset is **moderately imbalanced**: the most frequent intent (`card_arrival`) has 285 samples, while the rarest intents (e.g., `exchange_via_app`, `fiat_currency_support`) have only 45–50 samples each.
-- Common words include: *“card”*, *“payment”*, *“account”*, *“blocked”*, and *“transaction”*, reflecting typical banking support topics.
-- Despite the imbalance, all intentions contain at least 45 examples, and this is enough to tune the model.
+- **Goal:** Automatically classify user requests (“intents”) in banking using classic NLP approaches.
+- **Data:** [BANKING77 dataset](https://huggingface.co/datasets/legacy-datasets/banking77) — 77 intent classes, 13k user queries.
 
-### Recommendation:
-If you're using simpler machine learning models (like SVM TF-IDF or logistic regression), it’s a good idea to **balance the data**—for example, by adding more examples for rare intents or telling the model to pay extra attention to them. This helps the model understand less common questions better.
+---
 
-=======
 ## Pipeline
 
 1. **Data ingestion:** `train.csv`, `test.csv` (plus `label_names.json`).
@@ -39,18 +35,11 @@ Full reports (per-class) and confusion matrices are in `data/banking77/eval_arti
 
 ## Quickstart — How to Run
 
-1. 
-   - **(Optional) Setup environment(for Mac)**
+1. **(Optional) Setup environment**
     ```bash
     python3 -m venv venv
-    source venv/bin/activate 
+    source venv/bin/activate
     pip install -r requirements.txt
-    ```
-    - **Setup environment(for Windows)**
-
-    ```bash
-    python3 -m venv venv
-    venv\Scripts\activate 
     ```
 
 2. **Download/prepare data**  
