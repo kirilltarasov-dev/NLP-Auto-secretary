@@ -12,8 +12,6 @@ The dataset contains **77 intents** and **13,083 user utterances**, covering a w
 ### Recommendation:
 If you're using simpler machine learning models (like SVM TF-IDF or logistic regression), it’s a good idea to **balance the data**—for example, by adding more examples for rare intents or telling the model to pay extra attention to them. This helps the model understand less common questions better.
 
-<<<<<<< Updated upstream
-Link to a dattset: https://huggingface.co/datasets/legacy-datasets/banking77
 =======
 ## Pipeline
 
@@ -121,4 +119,3 @@ Full reports (per-class) and confusion matrices are in `data/banking77/eval_arti
 - **Daniil Istomin & Kirill Tarasov**  
 - Data: [BANKING77 on HuggingFace](https://huggingface.co/datasets/legacy-datasets/banking77)  
 - Pipeline/code: University of Debrecen, Department of Data Science and Visualization, 2025.
->>>>>>> Stashed changes
