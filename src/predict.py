@@ -12,7 +12,8 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
-DATA_DIR = "data/banking77/"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, "data", "banking77")
 VECTORIZER_PATH = os.path.join(DATA_DIR, "tfidf_vectorizer.joblib")
 MODEL_PATH = os.path.join(DATA_DIR, "logreg_model.joblib")
 LABEL_NAMES_PATH = os.path.join(DATA_DIR, "label_names.json")

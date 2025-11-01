@@ -71,7 +71,14 @@ Full reports (per-class) and confusion matrices are in `data/banking77/eval_arti
 
 7. **(Optional) Edit `responses.json` to add/edit chatbot replies for each intent.**
 
+8. **Activate chatbot in Streamlit Interface**
+```bash
+  streamlit run app\app.py 
+``` 
+
 ---
+
+
 
 ## Project Files
 

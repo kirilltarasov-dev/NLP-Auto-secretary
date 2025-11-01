@@ -36,10 +36,11 @@ def reply(user_text: str) -> Dict[str, Any]:
     confidence = top["prob"]
 
     answer = responses.get(intent_name)
-    if not answer:
+    if confidence < 0.1 or not answer or answer.strip() == "":
         # Fallback: универсальный ответ, укажем распознанный интент и уверенность
         answer = (
-            f"I think your intent is '{intent_name}' (p={confidence:.2f}). "
+            "Sorry i cant help you with an answer, can you perephrase the question?."
+            f"I think your intent is '{intent_name}' (p={confidence:.2f}), but im not sure. "
             "Please provide more details so I can assist you better."
         )
 
