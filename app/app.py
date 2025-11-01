@@ -1,92 +1,87 @@
 import streamlit as st
-import joblib
+import sys
 import os
-import json
-import numpy as np
 
-# ==================== ПУТИ К ФАЙЛАМ ====================
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "..", "data", "banking77", "logreg_model.joblib")
-VECTORIZER_PATH = os.path.join(BASE_DIR, "..", "data", "banking77", "tfidf_vectorizer.joblib")
-LABELS_PATH = os.path.join(BASE_DIR, "..", "data", "banking77", "label_names.json")
+# ==================== ДОБАВЛЕНИЕ ПУТИ К SRC ====================
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(BASE_DIR)
 
-# ==================== ЗАГРУЗКА МОДЕЛИ ====================
-model = joblib.load(MODEL_PATH)
-vectorizer = joblib.load(VECTORIZER_PATH)
-
-with open(LABELS_PATH, "r", encoding="utf-8") as f:
-    labels = json.load(f)
+from src.chatbot_logic import reply
 
 # ==================== НАСТРОЙКА STREAMLIT ====================
-st.set_page_config(page_title="Банковский ассистент", page_icon="💳")
+st.set_page_config(page_title="Banking Assistant", page_icon="💳")
 
 st.markdown(
     """
     <style>
-.user-msg {
-    background-color: #1a237e;  /* темно-синий для запроса пользователя */
-    color: #ffffff;
-    border-radius: 15px;
-    padding: 10px 15px;
-    margin: 5px 0;
-    text-align: right;
-    max-width: 70%;
-    float: right;
-    clear: both;
-}
-.bot-msg {
-    background-color: #2c2c2c;  /* темно-серый для ответа бота */
-    color: #ffffff;
-    border-radius: 15px;
-    padding: 10px 15px;
-    margin: 5px 0;
-    text-align: left;
-    max-width: 70%;
-    float: left;
-    clear: both;
-}
-.chat-container {
-    overflow: auto;
-    padding-bottom: 20px;
-}
-</style>
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    .user-msg {
+        background-color: #1a237e;  /* темно-синий для запроса пользователя */
+        color: #ffffff;
+        border-radius: 15px;
+        padding: 10px 15px;
+        margin: 5px 0;
+        text-align: right;
+        max-width: 70%;
+        float: right;
+        clear: both;
+    }
+    .bot-msg {
+        background-color: #2c2c2c;  /* темно-серый для ответа бота */
+        color: #ffffff;
+        border-radius: 15px;
+        padding: 10px 15px;
+        margin: 5px 0;
+        text-align: left;
+        max-width: 70%;
+        float: left;
+        clear: both;
+    }
+    .chat-container {
+        overflow: auto;
+        padding-bottom: 20px;
+    }
+    .stTextInput>div>div>input {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+    </style>
     """,
     unsafe_allow_html=True
 )
 
-st.title("💬 Ассистент для банковских услуг")
+st.title("How can i help you today?")
 
-# ==================== СООБЩЕНИЯ ====================
+# ==================== 🔧 ПЕРЕКЛЮЧАТЕЛЬ ДЛЯ РАЗРАБОТЧИКОВ ====================
+show_intent = st.sidebar.toggle("Show predicted intent", value=False)
+
+# ==================== ИСТОРИЯ СООБЩЕНИЙ ====================
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-def get_bot_response(text: str) -> str:
-    X = vectorizer.transform([text])
-    pred = model.predict(X)
-    # Получаем числовой индекс предсказания корректно
-    try:
-        pred_idx = int(pred[0]) if hasattr(pred, "__iter__") else int(pred)
-    except Exception:
-        # на случай, если модель возвращает строку метки
-        try:
-            return f"📂 Категория вашего запроса: **{str(pred)}**"
-        except Exception:
-            return "Ошибка при получении предсказания."
-
-    if 0 <= pred_idx < len(labels):
-        label = labels[pred_idx]
-    else:
-        label = str(pred_idx)
-    return f"📂 Категория вашего запроса: **{label}**"
-
+# ==================== ОБРАБОТКА ВВОДА ПОЛЬЗОВАТЕЛЯ ====================
 user_input = st.chat_input("Введите сообщение...")
 
 if user_input:
-    st.session_state.messages.append({"role": "user", "text": user_input})
-    bot_response = get_bot_response(user_input)
-    st.session_state.messages.append({"role": "bot", "text": bot_response})
+    # Получаем ответ от chatbot_logic
+    response = reply(user_input)
+    answer_text = response.get("answer", "Sorry i cant help you with an answer, can you perephrase the question?.")
 
-# Контейнер для чата
+        #  Добавляем интент, если включен dev-режим
+    if show_intent:
+        intent = response.get("intent", "")
+        if intent:
+            answer_text += f"\n\n [{intent}]"
+
+
+    # Сохраняем сообщения в сессии
+    st.session_state.messages.append({"role": "user", "text": user_input})
+    st.session_state.messages.append({"role": "bot", "text": answer_text})
+
+# ==================== ОТОБРАЖЕНИЕ ЧАТА ====================
 st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 for msg in st.session_state.messages:
     if msg["role"] == "user":
