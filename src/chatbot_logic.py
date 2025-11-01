@@ -36,7 +36,7 @@ def reply(user_text: str) -> Dict[str, Any]:
     confidence = top["prob"]
 
     answer = responses.get(intent_name)
-    if confidence < 0.6 or not answer or answer.strip() == "":
+    if confidence < 0.1 or not answer or answer.strip() == "":
         # Fallback: универсальный ответ, укажем распознанный интент и уверенность
         answer = (
             "Sorry i cant help you with an answer, can you perephrase the question?."
